@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}RegulaVerify AI{% endblock %} · RegulaVerify AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}">
+      <span class="brand-mark"><span></span><span></span><span></span></span>
+      <span class="brand-copy"><strong>regula<span>verify</span></strong><small>AICTE · Review workspace</small></span>
+    </a>
+    <div class="side-label">WORKSPACE</div>
+    <nav class="side-nav">
+      <a class="side-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}"><span class="nav-icon">▦</span> Overview</a>
+      <a class="side-link {% if request.endpoint in ['application_detail','new_application','create_application'] %}active{% endif %}" href="{{ url_for('dashboard') }}"><span class="nav-icon">▤</span> Applications</a>
+      <a class="side-link" href="{{ url_for('dashboard') }}#review-queue"><span class="nav-icon">◷</span> Review queue</a>
+    </nav>
+    <div class="side-label side-label-spaced">SYSTEM</div>
+    <nav class="side-nav">
+      <a class="side-link" href="{{ url_for('dashboard') }}#rule-set"><span class="nav-icon">⌘</span> Rule set <span class="version-chip">v1.0</span></a>
+      <a class="side-link" href="{{ url_for('dashboard') }}#about"><span class="nav-icon">ⓘ</span> About prototype</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="privacy-note"><span class="privacy-icon">◈</span><div><strong>Evidence-first review</strong><p>Every finding links back to its source and rule.</p></div></div>
+      <div class="user-card">
+        <div class="avatar">{{ (g.user.display_name if g.user else 'R')[:1] }}</div>
+        <div class="user-copy"><strong>{{ g.user.display_name if g.user else 'Reviewer' }}</strong><small>{{ g.user.role|title if g.user else '' }} · Demo workspace</small></div>
+        <form action="{{ url_for('logout') }}" method="post" class="logout-form"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button title="Sign out" aria-label="Sign out">↗</button></form>
+      </div>
+    </div>
+  </aside>
+  <main class="main-panel">
+    <header class="topbar">
+      <div class="mobile-brand"><span class="brand-mark"><span></span><span></span><span></span></span><strong>regulaverify</strong></div>
+      <div class="breadcrumb">AICTE / <span>{% block breadcrumb %}Overview{% endblock %}</span></div>
+      <div class="top-actions"><span class="environment"><i></i> Prototype environment</span><span class="top-divider"></span><span class="top-user">{{ g.user.display_name if g.user else 'Reviewer' }}</span><div class="avatar avatar-small">{{ (g.user.display_name if g.user else 'R')[:1] }}</div></div>
+    </header>
+    <section class="page-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}"><span>{{ '✓' if category == 'success' else '!' }}</span>{{ message }}<button type="button" onclick="this.parentElement.remove()" aria-label="Dismiss">×</button></div>{% endfor %}</div>{% endif %}{% endwith %}
+      {% block content %}{% endblock %}
+    </section>
+    <footer class="page-footer"><span>RegulaVerify AI <span class="footer-dot">·</span> SIH 2026 <span class="footer-dot">·</span> AICTE PS 26261</span><span>Decision support only · Final review remains with authorized officials</span></footer>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
